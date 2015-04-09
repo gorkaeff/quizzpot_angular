@@ -1,9 +1,12 @@
 (function(){
-	"use strict";
+    "use strict";
 
-	angular.module('Bookmarks',[
-		
-	]);
+    angular.module('Bookmarks',[
+    
+    ])
 
-	console.log('Bookmarks module!');
+    .controller('MainController',function ($scope){
+        $scope.name = 'Gorka';
+        $scope.categories = ['HTML5','JavaScript','CSS','Games'];
+    });
 })();
