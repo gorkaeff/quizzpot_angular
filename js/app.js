@@ -20,12 +20,16 @@
 
         $scope.currentCategory = 'JavaScript';
 
-        $scope.setCategory = function(category){
+        $scope.setCurrentCategory = function(category){
             $scope.currentCategory = category;
         }
 
         $scope.isCurrentCategory = function(category){
             return $scope.currentCategory === category;
+        }
+
+        $scope.save = function(bookmark){
+            console.log(bookmark);
         }
     });
 })();
