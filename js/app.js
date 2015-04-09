@@ -24,6 +24,22 @@
         );
     })
 
+    .directive('bootstrapSelect',function(){
+
+        return {
+            require : 'ngModel',
+            link: function (scope, element, attrs, ngModel) {
+                var collection = attrs.bootstrapSelect,
+                valueProperty = attrs.selectValue,
+                labelProperty = attrs.selectLabel,
+                model = attrs.ngModel;
+
+                $(element).selectpicker();
+                console.log('My directive');
+            }
+        }
+    })
+
     .controller('MainController',function ($scope, Category, Bookmark){
         $scope.name = 'Gorka';
 
