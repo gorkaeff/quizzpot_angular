@@ -24,6 +24,14 @@
         );
     })
 
+    .directive('showhide', function (){
+        return {
+            link: function (scope, element, attrs) {
+
+            }
+        }
+    })
+
     .directive('bootstrapSelect', function ($parse){
 
         return {
@@ -95,18 +103,6 @@
         $scope.save = function(bookmark){
             if($scope.bookmarkForm.$valid){
                 if(!bookmark.id){
-                    var record = angular.copy(bookmark);
-
-                    record.id = $scope.bookmarks.length;
-                    $scope.bookmarks.push(record);
-                }
-                $('#bookmarkModal').modal('hide');
-            }
-        }
-
-        $scope.save = function(bookmark){
-            if($scope.bookmarkForm.$valid){
-                if(!bookmark.id){
                     var record = new Bookmark();
 
                     record.title = bookmark.title;
@@ -120,15 +116,6 @@
                     bookmark.$update();
                 }
                 $('#bookmarkModal').modal('hide');
-            }
-        }
-
-        $scope.remove = function(id){
-            for(var i=0,len=$scope.bookmarks.length;i<len;i++){
-                if($scope.bookmarks[i].id === id){
-                    $scope.bookmarks.splice(i,1);
-                    break;
-                }
             }
         }
 
