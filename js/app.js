@@ -14,7 +14,14 @@
     })
 
     .factory('Bookmark',function ($resource){
-        return $resource('http://bookmarks-angular.herokuapp.com/api/bookmarks');
+        return $resource('http://bookmarks-angular.herokuapp.com/api/bookmarks/:id',
+            {
+                id:'@id'
+            },
+            {
+                update : {method:'PUT'}
+            }
+        );
     })
 
     .controller('MainController',function ($scope, Category, Bookmark){
@@ -60,6 +67,8 @@
                     record.$save(function(){
                         $scope.bookmarks.push(record);
                     });
+                }else{
+                    bookmark.$update();
                 }
                 $('#bookmarkModal').modal('hide');
             }
@@ -72,6 +81,17 @@
                     break;
                 }
             }
+        }
+
+        $scope.remove = function(bookmark){
+            bookmark.$remove(function(){
+                for(var i=0,len=$scope.bookmarks.length;i<len;i++){
+                    if($scope.bookmarks[i].id === bookmark.id){
+                        $scope.bookmarks.splice(i,1);
+                        break;
+                    }
+                }
+            });
         }
 
         $scope.showWindow = function(bookmark){
