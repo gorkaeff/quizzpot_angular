@@ -7,7 +7,9 @@
 
     .controller('MainController',function ($scope){
         $scope.name = 'Gorka';
+
         $scope.categories = ['HTML5','JavaScript','CSS','Games'];
+
 		$scope.bookmarks = [
 			{id:1,name:'Quizzpot.com',url:'https://quizzpot.com',category:'JavaScript'},
 			{id:2,name:'Html5 Game Devs',url:'https://html5gamedevs.com',category:'Games'},
@@ -15,5 +17,15 @@
 			{id:4,name:'Bootstrap',url:'http://getbootstrap.com',category:'CSS'},
 			{id:5,name:'Card',url:'http://jessepollak.github.io/card/',category:'JavaScript'}
 		];
+
+        $scope.currentCategory = 'JavaScript';
+
+        $scope.setCategory = function(category){
+            $scope.currentCategory = category;
+        }
+
+        $scope.isCurrentCategory = function(category){
+            return $scope.currentCategory === category;
+        }
     });
 })();
