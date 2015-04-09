@@ -2,42 +2,38 @@
     "use strict";
 
     angular.module('Bookmarks',[
-    
+        'ngResource'
     ])
 
     .service('Category',function ($http){
-        this.getAll = function(success,failure){
+        this.getAll = function(success, failure){
             $http.get('http://bookmarks-angular.herokuapp.com/api/categories')
             .success(success)
             .error(failure);  
         }
     })
 
-    .controller('MainController',function ($scope, Category){
+    .factory('Bookmark',function ($resource){
+        return $resource('http://bookmarks-angular.herokuapp.com/api/bookmarks');
+    })
+
+    .controller('MainController',function ($scope, Category, Bookmark){
         $scope.name = 'Gorka';
 
-        Category.getAll(function(data){
-            $scope.categories = data.categories;
-        });
-
-        //$scope.categories = ['HTML5','JavaScript','CSS','Games'];
-
-        $scope.bookmarks = [
-            {id:1,title:'Quizzpot.com',url:'https://quizzpot.com',category:'JavaScript'},
-            {id:2,title:'Html5 Game Devs',url:'https://html5gamedevs.com',category:'Games'},
-            {id:3,title:'CSS Tricks',url:'http://css-tricks.com',category:'CSS'},
-            {id:4,title:'Bootstrap',url:'http://getbootstrap.com',category:'CSS'},
-            {id:5,title:'Card',url:'http://jessepollak.github.io/card/',category:'JavaScript'}
-        ];
-
-        $scope.currentCategory = 'JavaScript';
+        Category.getAll(
+            function (data){
+                $scope.categories = data.categories;
+                $scope.currentCategory = data.categories[0];
+                $scope.bookmarks = Bookmark.query();
+            }
+        );
 
         $scope.setCurrentCategory = function(category){
             $scope.currentCategory = category;
         }
 
         $scope.isCurrentCategory = function(category){
-            return $scope.currentCategory === category;
+            return $scope.currentCategory.id === category.id;
         }
 
         $scope.save = function(bookmark){
