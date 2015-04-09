@@ -5,10 +5,22 @@
     
     ])
 
-    .controller('MainController',function ($scope){
+    .service('Category',function ($http){
+        this.getAll = function(success,failure){
+            $http.get('http://bookmarks-angular.herokuapp.com/api/categories')
+            .success(success)
+            .error(failure);  
+        }
+    })
+
+    .controller('MainController',function ($scope, Category){
         $scope.name = 'Gorka';
 
-        $scope.categories = ['HTML5','JavaScript','CSS','Games'];
+        Category.getAll(function(data){
+            $scope.categories = data.categories;
+        });
+
+        //$scope.categories = ['HTML5','JavaScript','CSS','Games'];
 
         $scope.bookmarks = [
             {id:1,title:'Quizzpot.com',url:'https://quizzpot.com',category:'JavaScript'},
