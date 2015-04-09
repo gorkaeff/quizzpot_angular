@@ -48,6 +48,23 @@
             }
         }
 
+        $scope.save = function(bookmark){
+            if($scope.bookmarkForm.$valid){
+                if(!bookmark.id){
+                    var record = new Bookmark();
+
+                    record.title = bookmark.title;
+                    record.url = bookmark.url;
+                    record.category_id = bookmark.category.id;
+
+                    record.$save(function(){
+                        $scope.bookmarks.push(record);
+                    });
+                }
+                $('#bookmarkModal').modal('hide');
+            }
+        }
+
         $scope.remove = function(id){
             for(var i=0,len=$scope.bookmarks.length;i<len;i++){
                 if($scope.bookmarks[i].id === id){
