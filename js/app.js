@@ -24,13 +24,47 @@
         );
     })
 
-    .directive('showhide', function (){
-        return {
-            link: function (scope, element, attrs) {
+	.directive('modal', function () {
+	    return {
+	      template: '<div class="modal fade">' + 
+	          '<div class="modal-dialog">' + 
+	            '<div class="modal-content">' + 
+	              '<div class="modal-header">' + 
+	                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
+	                '<h4 class="modal-title">{{ title }}</h4>' + 
+	              '</div>' + 
+	              '<div class="modal-body" ng-transclude></div>' + 
+	            '</div>' + 
+	          '</div>' + 
+	        '</div>',
+	      restrict: 'E',
+	      transclude: true,
+	      replace:true,
+	      scope:true,
+	      link: function postLink(scope, element, attrs) {
+	        scope.title = attrs.title;
 
-            }
-        }
-    })
+	        scope.$watch(attrs.visible, function(value){
+	          if(value == true)
+	            $(element).modal('show');
+	          else
+	            $(element).modal('hide');
+	        });
+
+	        $(element).on('shown.bs.modal', function(){
+	          scope.$apply(function(){
+	            scope.$parent[attrs.visible] = true;
+	          });
+	        });
+
+	        $(element).on('hidden.bs.modal', function(){
+	          scope.$apply(function(){
+	            scope.$parent[attrs.visible] = false;
+	          });
+	        });
+	      }
+	    };
+	  })
 
     .directive('bootstrapSelect', function ($parse){
 
@@ -82,6 +116,8 @@
     })
 
     .controller('MainController',function ($scope, Category, Bookmark){
+		$scope.showModal = false;
+
         $scope.name = 'Gorka';
 
         Category.getAll(
@@ -101,22 +137,22 @@
         }
 
         $scope.save = function(bookmark){
-            if($scope.bookmarkForm.$valid){
-                if(!bookmark.id){
-                    var record = new Bookmark();
+            //if($scope.bookmarkForm.$valid){
+            if(!bookmark.id){
+                var record = new Bookmark();
 
-                    record.title = bookmark.title;
-                    record.url = bookmark.url;
-                    record.category_id = bookmark.category.id;
+                record.title = bookmark.title;
+                record.url = bookmark.url;
+                record.category_id = bookmark.category.id;
 
-                    record.$save(function(){
-                        $scope.bookmarks.push(record);
-                    });
-                }else{
-                    bookmark.$update();
-                }
-                $('#bookmarkModal').modal('hide');
+                record.$save(function(){
+                    $scope.bookmarks.push(record);
+                });
+            }else{
+                bookmark.$update();
             }
+            $scope.showModal = !$scope.showModal;
+            //}
         }
 
         $scope.remove = function(bookmark){
@@ -131,12 +167,12 @@
         }
 
         $scope.showWindow = function(bookmark){
-            $scope.bookmarkForm.$setPristine();
-            $scope.bookmarkForm.$setUntouched();
+            //$scope.bookmarkForm.$setPristine();
+            //$scope.bookmarkForm.$setUntouched();
 
             bookmark = bookmark || {category:$scope.currentCategory,url:''};
             $scope.bookmark = bookmark;       
-            $('#bookmarkModal').modal('show');
+            $scope.showModal = !$scope.showModal;
         }
     });
 })();
